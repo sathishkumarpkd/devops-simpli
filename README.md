@@ -75,4 +75,33 @@ curl wgetip.com
 http://104.43.195.118:8080/
 cat /var/lib/jenkins/secrets/initialAdminPassword
 	dde984ded38442c4972b300002de32c1
+	
+//Jenkins
+
+
+git clone https://github.com/anujdevopslearn/MavenBuild.git
+cd MavenBuild/
+apt install maven
+mvn clean
+mvn clean install
+
+// after forking from trainer
+https://github.com/sathishkumarpkd/MavenBuild.git
+
+//Payload URL in GitHub for webhook
+http://40.122.34.228:8080/github-webhook/
+
+// Secret token generated in Jenkins.(admin->configure->generatetoken with GitHub)
+111e3b3435d4294ad530134138fe178209
+
+//for practice
+https://github.com/jitpack/maven-simple
+from Anuj Sharma to All Participants:
+// Jenkins pipeline.
+https://github.com/jenkins-docs/simple-java-maven-app
+https://github.com/jenkinsci/pipeline-examples/tree/master/jenkinsfile-examples
+
+
+
+
 
