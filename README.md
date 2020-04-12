@@ -101,7 +101,78 @@ from Anuj Sharma to All Participants:
 https://github.com/jenkins-docs/simple-java-maven-app
 https://github.com/jenkinsci/pipeline-examples/tree/master/jenkinsfile-examples
 
+//Junit
+https://github.com/jitpack/maven-simple
+https://github.com/jitpack/maven-simple.git
+Lesson4 demo for Cucumebr config.
 
+//Ansible
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+ansible --version
+cd /etc/ansible
+vi ansible.cfg
+42006 : edit remote port for simplilearn in ansible.cfg.
+
+https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGuides/Ansible.txt
+//centos local installation.
+https://www.linuxtechi.com/manage-windows-host-using-ansible/
+
+cat ansible.cfg | grep 42006
+remote_port    = 42006
+
+//dynamic ip addr on host:
+https://github.com/sermilrod/ansible-dynamic-inventory
+
+vi /etc/ansible/hosts
+uncomment following servers : Grouped and Ungrouped.
+
+# Ex 1: Ungrouped hosts, specify before any group headers.
+green.example.com
+# Ex 2: A collection of hosts belonging to the 'webservers' group
+[webservers]
+alpha.example.org
+beta.example.org
+# Ex 3: A collection of database servers in the 'dbservers' group
+[dbservers]
+db01.intranet.mydomain.net
+
+//cat hosts : to show the edits done
+// perform the ping operations: it should fail.
+ ansible -m ping webservers
+ ansible -m ping dbservers
+ ansible -m ping green.example.com
+ ansible -m ping green.example.com1
+
+//failed ping
+green.example.com | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "Failed to connect to the host via ssh: ssh: Could not resolve hostname green.example.com: Name or service not known", 
+    "unreachable": true
+
+//to make it pass key has to be generated and add that key to client in  authorized_keys
+
+// generate key
+ssh-keygen -t rsa
+ls -lart /root/.ssh/
+
+// public key //cat /root
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3sjPlyCp3U1nYmPWhCKJbkxjVYg0twnRExG71yI5C2/wwvvsVHhoIrIF/e+xKbX23LblLidL8F78CYed2vSpQYnOjJmyPTEjGRP9G8cMt63gajKiDixrf4OQRftAbPc3uhrjHwn8Q3OJMF6ERM59JiQPDAKMalx90KeLzHePX4/i3jVo6FwM2r59kOSooIuFovKDD6A7E693d0PPZCpjuB2h13jceoJ5xW3aj/+ZgNtbxClJ2AVaMzk1LjEoyRSjvvFFboAhQgGjfRSOgEfdw8xPj5DkJD3W4GFLhFz9v8P7MYU1vsjOn06h6qF+3uuY+CCMENDYl3r6jHybZvCX/ root@sathishkumarpkd
+
+// on same machine server client.
+// copy the pub key(from master) to authorized_keys(client)
+// here its same machine,
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+ssh -p 42006 localhost "hostname"
+// returns sathishkumarpkd
+
+// edit the hosts
+vi /etc/ansible/hosts
+add localhost .
+and execute : ansible -m ping localhost
+// returns success.
 
 
 
