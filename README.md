@@ -174,5 +174,37 @@ add localhost .
 and execute : ansible -m ping localhost
 // returns success.
 
+//launchpad.net/ansible
+// diffreent modules and categories
+https://docs.ansible.com/ansible/latest/modules/modules_by_category.html
 
+//ansible module demo.
+//get yml file(playbook) from git
+//this will install apache server in local host.
+//this local host was saved in hosts.config earlier, under webserver group.
+//in real time, all the servers are to be mentioned in webserver group.
+
+wget https://gist.githubusercontent.com/anujdevopslearn/8395705058c9cd4f4f5c3fec5591b246/raw/ca103bfd5a8791c805aaed30efc9c2cb192e7e72/apache.yml
+ansible-playbook apache.yml
+
+//Instead of chnaging ansible.cfg for remote port and user, we can update in hosts.cfg.
+localhost ansible_port=42006 ansible_user=root(or any user like root permission)
+
+//adhoc commands for single line execution:
+// This is used instead of playbook
+ansible -m shell -a "service apache2 status" webservers
+ansible -m shell -a "apt -y install dos2unix" webservers
+
+// mysql installation.
+wget https://gist.githubusercontent.com/anujdevopslearn/98a73c0ef7f72a70fc11759f8b2b9c25/raw/344bd206c7dbadfd56f32dc755c06e450c9b0d0f/mysql.yml
+ansible-playbook mysql.yml
+ansible -m shell -a "service apache2 status" webservers
+
+// for autoscaling in AWS
+https://github.com/sermilrod/ansible-dynamic-inventory
+
+// for tomcat installation
+wget https://gist.githubusercontent.com/anujdevopslearn/efa28700a3b8aca18d2866aa2d24fa02/raw/a48022c9b6111a668fcc9f3f3c63928ea2840db0/TomcatInstallation.yml
+ansible-playbook TomcatInstallation.yml
+ansible -m shell -a "service tomcat status" webservers
 
