@@ -208,3 +208,55 @@ wget https://gist.githubusercontent.com/anujdevopslearn/efa28700a3b8aca18d2866aa
 ansible-playbook TomcatInstallation.yml
 ansible -m shell -a "service tomcat status" webservers
 
+//ansible module for docker
+https://docs.ansible.com/ansible/2.6/modules/list_of_cloud_modules.html#docker
+
+//Docker
+apt update
+apt install docker.io
+service docker restart
+docker version
+docker pull ubuntu
+docker images
+docker rmi ubuntu:18.04 // remove image
+
+// run the container,the root user at Host machine will be changed to 
+// ubuntu container, since this is trimmed version, ot of Ubuntu commands wont work, 
+// but we can install one by one.
+// root@sathishkumarpkd:~#  to root@a9b325b6e811:/#
+docker run -it ubuntu bash
+// docker commands wont work inside ubuntu container.
+>exit
+
+// shows this container id, which is in exit status.
+docker ps -a
+//-d detach, is diffrent from -it, as we stay in root@hostmachine itself.
+docker run -d jenkins
+// same above but,name is provided.
+docker run --name dev_jenkins -d jenkins
+
+//docker exec -it sath_dev_jenkins bash
+//cat /var/lib/jenkins_home/secrets/initialAdminPassword
+
+docker ps
+docker stop 515328e2e454
+docker ps
+docker restart 515328e2e454
+docker ps
+docker rm 515328e2e454  -f
+
+// to access from outside world.
+// -p hostport:container port
+
+docker run --name prod_jenkins -d -p 8080:8080 jenkins
+docker ps
+docker run --name dev_jenkins -d -p 80:8080 jenkins
+docker ps
+curl wgetip.com
+
+// home work for Nagios installation.
+https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGuides/CleanServices.txt
+Run Commands from root ID:    14-23
+https://assets.nagios.com/downloads/nagiosxi/docs/Installing-Nagios-XI-Manually-on-Linux.pdf
+curl https://assets.nagios.com/downloads/nagiosxi/install.sh | sh
+
