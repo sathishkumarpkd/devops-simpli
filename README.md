@@ -260,3 +260,122 @@ Run Commands from root ID:    14-23
 https://assets.nagios.com/downloads/nagiosxi/docs/Installing-Nagios-XI-Manually-on-Linux.pdf
 curl https://assets.nagios.com/downloads/nagiosxi/install.sh | sh
 
+
+// docker build
+// and build an Image
+
+ git clone https://github.com/anujdevopslearn/Docker.git
+ cd Docker/
+ ls -lart
+ docker build -t customimage .
+ docker images
+
+////////////////////////docker file contents/////////////////////////////////////////////////
+//docker file contents displayed to create Custom image.
+cat Dockerfile 
+FROM ubuntu
+
+ENV DEBIAN_FRONTEND=non-interactive
+# Install dependencies
+RUN apt-get update -y
+RUN apt-get install -y git curl apache2 php libapache2-mod-php php-mysql
+
+# Install app
+RUN rm -rf /var/www/html/*
+ADD src /var/www/html/
+
+# Configure apache
+RUN a2enmod rewrite
+RUN chown -R www-data:www-data /var/www/html
+ENV APACHE_RUN_DIR /var/www/html
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+
+
+EXPOSE 80
+
+CMD ["/usr/sbin/apache2", "-D",  "FOREGROUND"]
+/////////////////////////end of docker file contents/////////////////////////////////////////////////
+//docker images built by above docker file.
+docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+customimage         latest              9c5e2eaf53ac        46 seconds ago      269MB
+ubuntu              latest              1d622ef86b13        27 hours ago        73.9MB
+////////////////////////////////end of docker images built by above docker file.//////////////////////
+
+// run 
+docker run -d -p 8081:80 customimage
+//http://localhost:8081/ : this will accessed inside VM.
+
+//Assignment
+https://github.com/anujdevopslearn/AspDotNetDocker.git
+
+//Docker compose install
+
+curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+//execute docker compose
+  git clone https://github.com/anujdevopslearn/DockerCompose.git
+  cd DockerCompose/
+  ls -alrt
+  cat Dockerfile 
+  mvn clean install -Dmaven.test.skip=true
+  ls -alrt target
+  docker-compose up -d
+  docker images
+  docker ps  -a
+
+/////////////////////////////////////docker-compose.yml////////////////////////////////////////////////////////
+cat docker-compose.yml 
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=spring_app_db
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD=test123
+  
+  spring-boot-jpa-app:
+    image: spring-boot-jpa-image
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - 8087:8080
+
+//////////////////////////////////////end of docker-compose.yml/////////////////////////////////////////////////
+//docker file in compose eg:
+cat Dockerfile 
+FROM ubuntu:18.04
+
+RUN apt -y update && apt -y install openjdk-8-jdk maven apache2
+WORKDIR /app
+
+COPY . /app
+
+
+EXPOSE 8080
+LABEL maintainer=“chathuranga.t@gmail.com”
+ADD ./target/spring-boot-data-jpa-example-0.0.1-SNAPSHOT.jar spring-boot-data-jpa-example-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","spring-boot-data-jpa-example-0.0.1-SNAPSHOT.jar"]
+///////////////////////////////////end of docker file in compose eg://////////////////////////////////////////
+
+// Nagios monitoring DB
+// Mysql is running in docker
+docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=password mysql
+// not in pubic access
+docker inspect mysql | grep IPAddress
+
+//Kubernetes installation
+https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGuides/CleanServices.txt
+28-30
+https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGuides/Kubernetes.txt
+3-19
+
