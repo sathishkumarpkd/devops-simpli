@@ -379,3 +379,137 @@ https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGu
 https://github.com/anujdevopslearn/InterviewQuestions/blob/master/InstallationGuides/Kubernetes.txt
 3-19
 
+//Kube cheat sheet.
+http://m76.eu/cheatsheet-kubernetes-A4.pdf
+
+//pull bootcamp image from docker hub
+kubectl run kubernetes-bootcamp --image=docker.io/jocatalin/kubernetes-bootcamp:v1 --port=8080
+kubectl get deployments
+kubectl get pods
+//////////////////////////////////////////////////////////////////
+kubectl get deployments  //get deployments
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           51s
+
+kubectl get pods  // get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-7dc9765bf6-4n9fm   1/1     Running   0          67s
+
+////////////////////////////////////////////////////////////////
+//
+kubectl run kubernetes-jenkins --image=docker.io/jenkins:latest --port=8080
+kubectl run kubernetes-nginx --image=docker.io/nginx --port=80
+
+//get pods
+  kubectl get pods
+  kubectl describe pod kubernetes-bootcamp-7dc9765bf6-dfjzg
+// get ip
+  kubectl get pods -o wide
+
+///////////////////////////////////Console output////////////////////
+//kubectl describe pod kubernetes-bootcamp-7dc9765bf6-4n9fm
+Name:           kubernetes-bootcamp-7dc9765bf6-4n9fm
+Namespace:      default
+Priority:       0
+Node:           sathishkumarpkd/10.0.1.4
+Start Time:     Sun, 26 Apr 2020 06:02:35 +0000
+Labels:         pod-template-hash=7dc9765bf6
+                run=kubernetes-bootcamp
+Annotations:    <none>
+Status:         Running
+IP:             10.32.0.4
+Controlled By:  ReplicaSet/kubernetes-bootcamp-7dc9765bf6
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   docker://0dec7ab466b939c4f321648890d46d0b977f3866546c52a1a7dd36d1fcfa0c94
+    Image:          docker.io/jocatalin/kubernetes-bootcamp:v1
+    Image ID:       docker-pullable://jocatalin/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sun, 26 Apr 2020 06:02:57 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-fk4c2 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  default-token-fk4c2:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-fk4c2
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age   From                      Message
+  ----    ------     ----  ----                      -------
+  Normal  Scheduled  15m   default-scheduler         Successfully assigned default/kubernetes-bootcamp-7dc9765bf6-4n9fm to sathishkumarpkd
+  Normal  Pulling    15m   kubelet, sathishkumarpkd  Pulling image "docker.io/jocatalin/kubernetes-bootcamp:v1"
+  Normal  Pulled     15m   kubelet, sathishkumarpkd  Successfully pulled image "docker.io/jocatalin/kubernetes-bootcamp:v1"
+  Normal  Created    15m   kubelet, sathishkumarpkd  Created container kubernetes-bootcamp
+  Normal  Started    15m   kubelet, sathishkumarpkd  Started container kubernetes-bootcamp
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP          NODE              NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-7dc9765bf6-4n9fm   1/1     Running   0          16m   10.32.0.4   sathishkumarpkd   <none>           <none>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//curl 10.32.0.4:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-7dc9765bf6-4n9fm | v=1
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//execute and access from outside.
+kubectl exec -it kubernetes-bootcamp-7dc9765bf6-4n9fm bash
+ps -ef
+exit
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//ps -ef
+UID         PID   PPID  C STIME TTY          TIME CMD
+root          1      0  0 06:02 ?        00:00:00 /bin/sh -c node server.js
+root          7      1  0 06:02 ?        00:00:00 node server.js
+root         25      0  0 06:30 pts/0    00:00:00 bash
+root         32     25  0 06:31 pts/0    00:00:00 ps -ef
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+kubectl expose deployment/kubernetes-bootcamp --port=8080 --target-port=8080 --type=NodePort
+kubectl expose deployment/kubernetes-jenkins --port=8080 --target-port=8080 --type=NodePort
+kubectl expose deployment/kubernetes-nginx --port=80 --target-port=80 --type=NodePort
+//
+kubectl get svc
+
+//
+  clear
+  kubectl get pods
+  kubectl delete pod kubernetes-bootcamp-7dc9765bf6-4n9fm
+  kubectl get pods
+  curl localhost:30382
+// scaling to 2 pods.
+  kubectl scale deployments/kubernetes-bootcamp --replicas=2
+// to delete all pods
+  kubectl scale deployments/kubernetes-bootcamp --replicas=0
+  kubectl get pods
+  kubectl get pods -o wide
+//////after scaling with 2 replicas/////////////////////////////////////////////////////////////////////////////////////
+kubectl get pods -o wide
+NAME                                   READY   STATUS    RESTARTS   AGE   IP          NODE              NOMINATED NODE   READINESS GATES
+kubernetes-bootcamp-7dc9765bf6-bf5xx   1/1     Running   0          12m   10.32.0.5   sathishkumarpkd   <none>           <none>
+kubernetes-bootcamp-7dc9765bf6-tvh44   1/1     Running   0          26s   10.32.0.4   sathishkumarpkd   <none>           <none>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  curl localhost:30382
+// set image with v2 version, so pods with v1 will get deleted automatically.
+kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+kubectl rollout status deployments/kubernetes-bootcamp
+
+
+//project simplilearn.
+https://github.com/anujdevopslearn/InterviewQuestions/tree/master/Demos
+https://github.com/anujdevopslearn/InterviewQuestions/blob/master/Demos/Dockerize%20Angular%20App%20-%20Solution.docx
